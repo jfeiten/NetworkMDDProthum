@@ -13,26 +13,27 @@ head(symptoms_df)
 
 summary(symptoms_df)
 
-selected_vars <- c(colnames(symptoms_df)[grepl("HAM", colnames(symptoms_df))])
+selected_vars <- c(colnames(symptoms_df)[grepl("BDI", colnames(symptoms_df))])
 selected_vars
 
 symptoms_df <- symptoms_df[, selected_vars]
 dim(symptoms_df)
 head(symptoms_df)
 
-nodes_labs <- c("Mood", "Suic", "Guilt", "Ins Ni", "Ins Mi", "Ins Mo", "Wk Ac", "Ret", "Agi", 
-                "An Pch", "An Som", "Som GI", "G Som", "Genit", "Hyp", "Ls W", "Cons")
+nodes_labs <- c("Mood", "Pess", "Fail", "Diss", "Gui", "Pun", "Disl", "Acc", "Sui", 
+                "Cry", "Irr", "SocW", "Ind", "Body", "WDif", "Ins", "Fati", "LsAp", "WLos",
+                "SomP", "LsLb")
 
-long_labs <- c("Depressed Mood", "Suicide", "Feelings Of Guilt", "Insomnia: Early In The Night", "Insomnia: Middle Of The Night",
-               "Insomnia: Early Hours Of The Morning", "Work And Activities", "Retardation", "Agitation", "Anxiety Psychic",
-               "Anxiety Somatic", "Somatic Symptoms Gastro-intestinal", "General Somatic Symptoms", "Genital Symptoms",
-               "Hypochondriasis", "Loss Of Weight", "Consciousness")
+long_labs <- c("Mood", "Pessimism", "Sense of failure", "Self-dissatisfaction", "Guilt", "Punishment", 
+               "Self-dislike", "Self-accusation", "Suicidal ideas", "Crying", "Irritability", 
+               "Social withdrawal", "Indecisiveness", "Body image change", "Work difficulty", 
+               "insomnia", "Fatigability", "Loss of appetite", "Weight loss", "Somatic preoccupation", 
+               "Loss of libido")
 
 labs_df <- data.frame(item = colnames(symptoms_df), nodes_labs, long_labs)
 labs_df
 
 df <- scale(symptoms_df)
-colnames(df) <- nodes_labs
 
 # Estimating networks ----
 model_net <- estimateNetwork(df, default = c("EBICglasso"))
@@ -67,4 +68,4 @@ net_gb <- goldbricker(df, threshold = 0.5)
 net_gb$suggested_reductions
 net_gb$threshold
 
-save.image("session/session_hdrs_networks.RData")
+save.image("session/session_bdi_networks.RData")
