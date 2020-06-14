@@ -13,24 +13,20 @@ head(symptoms_df)
 
 summary(symptoms_df)
 
-selected_vars <- c(colnames(symptoms_df)[grepl("BDI", colnames(symptoms_df))])
+selected_vars <-  c("HAM1", "HAM2", "HAM7", "HAM8", "HAM10", "HAM13")
 selected_vars
 
 symptoms_df <- symptoms_df[, selected_vars]
 dim(symptoms_df)
 head(symptoms_df)
 
-ncol(symptoms_df)*(ncol(symptoms_df)-1)/2*3
+library(dplyr)
+# depressed mood, guilt, work and interests, psychomotor retardation, psychic anxiety and general somatic symptoms
 
-nodes_labs <- c("Mood", "Pess", "Fail", "Diss", "Gui", "Pun", "Disl", "Acc", "Sui", 
-                "Cry", "Irr", "SocW", "Ind", "Body", "WDif", "Ins", "Fati", "LsAp", "WLos",
-                "SomP", "LsLb")
+nodes_labs <- c("Mood", "Guilt", "Wk Ac", "Ret", "An Pch", "G Som")
 
-long_labs <- c("Mood", "Pessimism", "Sense of failure", "Self-dissatisfaction", "Guilt", "Punishment", 
-               "Self-dislike", "Self-accusation", "Suicidal ideas", "Crying", "Irritability", 
-               "Social withdrawal", "Indecisiveness", "Body image change", "Work difficulty", 
-               "insomnia", "Fatigability", "Loss of appetite", "Weight loss", "Somatic preoccupation", 
-               "Loss of libido")
+long_labs <- c("Depressed Mood", "Feelings Of Guilt", "Work And Activities", "Retardation", "Anxiety Psychic",
+               "General Somatic Symptoms")
 
 labs_df <- data.frame(item = colnames(symptoms_df), nodes_labs, long_labs)
 labs_df
@@ -59,7 +55,6 @@ set.seed(1234)
 boot_case1000 <- bootnet(model_net, nBoots = 2500, caseN = 1000, type = "case", nCores = 2, statistics = c("Strength", "Betweenness", "Closeness"))
 corStability(boot_case1000)
 
-
 set.seed(1234)
 boot <- bootnet(model_net, nBoots = 2500, nCores = 2)
 
@@ -70,10 +65,8 @@ boot_npar <- bootnet(model_net, nBoots = 2500, type = "nonparametric", nCores = 
 plot(boot)
 plot(boot_npar, statistics = c("Strength", "Betweenness", "Closeness"))
 plot(boot_case, statistics = c("Strength", "Betweenness", "Closeness"))
+plot(boot_case_better, statistics = c("Strength", "Betweenness", "Closeness"))
 
-corStability(boot_case)
-
-packageVersion("bootnet")
 
 # Combining similar nodes
 library(networktools)
@@ -81,6 +74,6 @@ net_gb <- goldbricker(df, threshold = 0.5)
 net_gb$suggested_reductions
 net_gb$threshold
 
-#write.table(labs_df, file = "cache/bdi_labs_table.txt", row.names = FALSE, sep = "\t")
-save.image("session/session_bdi_networks.RData")
-#load("session/session_bdi_networks.RData")
+#write.table(labs_df, file = "cache/hdrs_labs_table.txt", row.names = FALSE, sep = "\t")
+save.image("session/session_hdrs6_networks.RData")
+#load("session/session_hdrs6_networks.RData")
